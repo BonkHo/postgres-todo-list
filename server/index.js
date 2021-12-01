@@ -10,6 +10,20 @@ app.use(express.json());
 
 // Routes
 // create todo
+app.post("/todos", async (req, res) => {
+	// await
+	try {
+		const { description } = req.body;
+		const newTodo = await pool.query(
+			"INSERT INTO todo (description) VALUES($1)",
+			[description]
+		);
+		res.json(newTodo);
+	} catch (err) {
+		console.error(err.message);
+		res.status(500).send("Server Error");
+	}
+});
 // get all todos
 // get todo by id
 // update todo
