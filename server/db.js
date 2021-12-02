@@ -1,9 +1,9 @@
 const Pool = require("pg").Pool;
-const { PASSWORD } = require("./config");
+const { PASSWORD } = require("./config.js");
 
 const pool = new Pool({
 	user: "postgres",
-	password: PASSWORD,
+	password: "Illputt321",
 	host: "localhost",
 	post: 5432,
 	database: "perntodo",
