@@ -1,36 +1,58 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 
 const ListTodos = () => {
+	const [todos, setTodos] = useState([]);
+
+	const getTodos = async () => {
+		try {
+			const response = await fetch("http://localhost:5000/todos");
+			const data = await response.json();
+			setTodos(data);
+		} catch (err) {
+			console.error(err.message);
+		}
+	};
+
+	const deleteTodo = async (id) => {
+		try {
+			const deleteTodo = await fetch(`http://localhost:5000/todos/${id}`, {
+				method: "DELETE",
+			});
+			setTodos(todos.filter((todo) => todo.todo_id !== id));
+		} catch (err) {
+			console.error(err.message);
+		}
+	};
+
+	useEffect(() => {
+		getTodos();
+	}, []);
+
 	return (
 		<Fragment>
-			<table class="table">
+			<table className="table mt-5 text-center">
 				<thead>
 					<tr>
-						<th scope="col">#</th>
-						<th scope="col">First</th>
-						<th scope="col">Last</th>
-						<th scope="col">Handle</th>
+						<th>Description</th>
+						<th>Edit</th>
+						<th>Delete</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<th scope="row">1</th>
-						<td>Mark</td>
-						<td>Otto</td>
-						<td>@mdo</td>
-					</tr>
-					<tr>
-						<th scope="row">2</th>
-						<td>Jacob</td>
-						<td>Thornton</td>
-						<td>@fat</td>
-					</tr>
-					<tr>
-						<th scope="row">3</th>
-						<td>Larry</td>
-						<td>the Bird</td>
-						<td>@twitter</td>
-					</tr>
+					{todos.map((todo) => (
+						<tr key={todo.todo_id}>
+							<td>{todo.description}</td>
+							<td>Edit</td>
+							<td>
+								<button
+									className="btn btn-danger"
+									onClick={() => deleteTodo(todo.todo_id)}
+								>
+									Delete
+								</button>
+							</td>
+						</tr>
+					))}
 				</tbody>
 			</table>
 		</Fragment>
